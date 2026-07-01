@@ -6,7 +6,6 @@
 <title>בר המצווה של הלל חדד – אישור הגעה</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --purple-light: #EEEDFE;
     --purple-mid: #7F77DD;
@@ -23,155 +22,49 @@
     --radius-lg: 16px;
     --radius-xl: 24px;
   }
-
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: var(--gray-bg);
-    color: var(--text-primary);
-    min-height: 100vh;
-    direction: rtl;
-  }
-
-  /* ── Pages ── */
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--gray-bg); color: var(--text-primary); min-height: 100vh; direction: rtl; }
   .page { display: none; min-height: 100vh; }
   .page.active { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; }
-
-  /* ── Form Page ── */
-  .event-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--purple-light); color: var(--purple-text);
-    border-radius: 999px; padding: 5px 16px; font-size: 13px; font-weight: 500;
-    margin-bottom: 1.25rem;
-  }
-  .star-icon { font-size: 16px; }
-  .event-title {
-    font-size: 36px; font-weight: 600; color: var(--text-primary);
-    text-align: center; margin-bottom: 6px; letter-spacing: -0.5px;
-  }
-  .event-subtitle {
-    font-size: 16px; color: var(--text-secondary); text-align: center; margin-bottom: 2rem;
-  }
-
-  .card {
-    background: var(--white); border-radius: var(--radius-xl);
-    border: 1px solid var(--gray-border); padding: 2rem;
-    width: 100%; max-width: 420px;
-    box-shadow: 0 2px 24px rgba(0,0,0,0.06);
-  }
-
-  .field-label {
-    display: block; font-size: 14px; font-weight: 500;
-    color: var(--text-secondary); margin-bottom: 8px;
-  }
-  .field-label + .field-label { margin-top: 1.25rem; }
-
-  input[type="text"], input[type="password"] {
-    width: 100%; padding: 11px 14px;
-    border: 1px solid var(--gray-border); border-radius: var(--radius-md);
-    font-size: 15px; color: var(--text-primary); background: var(--white);
-    outline: none; transition: border-color 0.15s;
-    direction: rtl;
-  }
-  input[type="text"]:focus, input[type="password"]:focus {
-    border-color: var(--purple-mid);
-    box-shadow: 0 0 0 3px rgba(127,119,221,0.15);
-  }
-
-  .toggle-row { display: flex; gap: 10px; margin-top: 8px; }
-  .toggle-btn {
-    flex: 1; padding: 11px 10px;
-    border: 1px solid var(--gray-border); border-radius: var(--radius-md);
-    background: var(--white); color: var(--text-primary);
-    font-size: 14px; font-weight: 500; cursor: pointer;
-    transition: all 0.15s;
-  }
-  .toggle-btn:hover { border-color: var(--purple-mid); }
-  .toggle-btn.selected-yes {
-    background: var(--purple-light); border-color: var(--purple-mid);
-    color: var(--purple-text);
-  }
-  .toggle-btn.selected-no {
-    background: var(--coral-light); border-color: #D85A30;
-    color: var(--coral-text);
-  }
-
-  .submit-btn {
-    width: 100%; margin-top: 1.5rem; padding: 13px;
-    background: var(--purple-dark); color: white;
-    border: none; border-radius: var(--radius-md);
-    font-size: 15px; font-weight: 600; cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-  }
+  .event-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--purple-light); color: var(--purple-text); border-radius: 999px; padding: 5px 16px; font-size: 13px; font-weight: 500; margin-bottom: 1.25rem; }
+  .event-title { font-size: 36px; font-weight: 600; color: var(--text-primary); text-align: center; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .event-subtitle { font-size: 16px; color: var(--text-secondary); text-align: center; margin-bottom: 0.5rem; }
+  .card { background: var(--white); border-radius: var(--radius-xl); border: 1px solid var(--gray-border); padding: 2rem; width: 100%; max-width: 420px; box-shadow: 0 2px 24px rgba(0,0,0,0.06); margin-top: 1.5rem; }
+  .field-label { display: block; font-size: 14px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; }
+  input[type="text"], input[type="password"] { width: 100%; padding: 11px 14px; border: 1px solid var(--gray-border); border-radius: var(--radius-md); font-size: 15px; color: var(--text-primary); background: var(--white); outline: none; transition: border-color 0.15s; direction: rtl; }
+  input[type="text"]:focus, input[type="password"]:focus { border-color: var(--purple-mid); box-shadow: 0 0 0 3px rgba(127,119,221,0.15); }
+  .submit-btn { width: 100%; margin-top: 1.5rem; padding: 13px; background: var(--purple-dark); color: white; border: none; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
   .submit-btn:hover { background: var(--purple-text); }
-  .submit-btn:active { transform: scale(0.98); }
-
   .err-msg { font-size: 13px; color: var(--coral-text); margin-top: 10px; display: none; }
-
-  .dash-link {
-    margin-top: 1.5rem; font-size: 13px; color: var(--text-secondary);
-    cursor: pointer; background: none; border: none;
-    text-decoration: underline; text-underline-offset: 3px;
-  }
+  .dash-link { margin-top: 1.5rem; font-size: 13px; color: var(--text-secondary); cursor: pointer; background: none; border: none; text-decoration: underline; text-underline-offset: 3px; }
   .dash-link:hover { color: var(--text-primary); }
-
-  /* ── Thank You ── */
-  .thanks-icon {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: var(--purple-light); display: flex; align-items: center; justify-content: center;
-    font-size: 32px; margin: 0 auto 1.5rem;
-  }
+  .thanks-icon { width: 72px; height: 72px; border-radius: 50%; background: var(--purple-light); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 1.5rem; }
   .thanks-title { font-size: 26px; font-weight: 600; text-align: center; margin-bottom: 10px; }
   .thanks-msg { font-size: 16px; color: var(--text-secondary); text-align: center; line-height: 1.7; max-width: 320px; }
-  .back-btn {
-    margin-top: 2rem; padding: 11px 28px;
-    border: 1px solid var(--gray-border); border-radius: var(--radius-md);
-    background: var(--white); color: var(--text-primary);
-    font-size: 14px; font-weight: 500; cursor: pointer;
-  }
+  .back-btn { margin-top: 2rem; padding: 11px 28px; border: 1px solid var(--gray-border); border-radius: var(--radius-md); background: var(--white); color: var(--text-primary); font-size: 14px; font-weight: 500; cursor: pointer; }
   .back-btn:hover { border-color: var(--purple-mid); color: var(--purple-text); }
-
-  /* ── PIN Page ── */
   .pin-wrapper { text-align: center; max-width: 320px; width: 100%; }
-  .lock-icon { font-size: 36px; margin-bottom: 1rem; }
   .pin-title { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
   .pin-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6; }
-  .pin-input { text-align: center; letter-spacing: 3px; font-size: 18px; }
-
-  /* ── Dashboard ── */
   #page-dash.active { justify-content: flex-start; padding: 2rem; }
   .dash-inner { width: 100%; max-width: 700px; margin: 0 auto; }
   .dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 12px; }
   .dash-title { font-size: 20px; font-weight: 600; }
-  .dash-actions { display: flex; gap: 8px; align-items: center; }
-  .icon-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 14px; font-size: 13px; font-weight: 500;
-    border: 1px solid var(--gray-border); border-radius: var(--radius-md);
-    background: var(--white); color: var(--text-primary); cursor: pointer;
-  }
+  .icon-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--gray-border); border-radius: var(--radius-md); background: var(--white); color: var(--text-primary); cursor: pointer; }
   .icon-btn:hover { border-color: var(--purple-mid); color: var(--purple-text); }
-
   .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
   .metric-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-border); padding: 1.25rem; text-align: center; }
   .metric-num { font-size: 32px; font-weight: 600; color: var(--text-primary); }
-  .metric-num.yes { color: var(--purple-text); }
-  .metric-num.no { color: var(--coral-text); }
   .metric-lbl { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
-
   .table-wrap { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-border); overflow: hidden; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   thead th { padding: 12px 16px; text-align: right; font-weight: 500; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--gray-border); }
   tbody td { padding: 12px 16px; border-bottom: 1px solid var(--gray-border); color: var(--text-primary); }
   tbody tr:last-child td { border-bottom: none; }
   tbody tr:hover td { background: var(--gray-bg); }
-
   .badge { display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 500; }
   .badge-yes { background: var(--purple-light); color: var(--purple-text); }
   .badge-no { background: var(--coral-light); color: var(--coral-text); }
-
   .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); font-size: 14px; }
-
-  /* ── Responsive ── */
   @media (max-width: 480px) {
     .event-title { font-size: 28px; }
     .card { padding: 1.5rem; }
@@ -183,116 +76,91 @@
 </head>
 <body>
 
-<!-- ═══ RSVP FORM ═══ -->
+<!-- RSVP FORM -->
 <div class="page active" id="page-form">
-  <div class="event-badge"><span class="star-icon">✡</span> הזמנה לבר מצווה</div>
+  <div class="event-badge"><span>✡</span> הזמנה לבר מצווה</div>
   <h1 class="event-title">הלל חדד</h1>
-  <p class="event-subtitle">ז' בספטמבר תשפ"ז · 7.9.2026</p>
-  <a href="https://waze.com/ul?q=צבי+1+מיתר" target="_blank" style="display:inline-flex;align-items:center;gap:8px;margin-top:10px;background:#EEF6FF;border:1px solid #C3DCF8;border-radius:999px;padding:7px 18px;font-size:14px;color:#1A5CA8;text-decoration:none;font-weight:500;">
+  <p class="event-subtitle">כ"ה באלול תשפ"ו · 7.9.2026</p>
+  <a href="https://waze.com/ul?q=צבי+1+מיתר" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#EEF6FF;border:1px solid #C3DCF8;border-radius:999px;padding:7px 18px;font-size:14px;color:#1A5CA8;text-decoration:none;font-weight:500;">
     📍 בית הכנסת בכרמית, מיתר &nbsp;·&nbsp; נווט בוויז
   </a>
-
   <div class="card">
     <label class="field-label" for="name-input">שמך המלא</label>
     <input type="text" id="name-input" placeholder="ישראל ישראלי" autocomplete="name" />
 
     <label class="field-label" style="margin-top:1.25rem;">כמה אורחים יגיעו? (0 = לא מגיע/ה)</label>
-    <div style="display:flex; align-items:center; gap:0; margin-top:8px; border:1px solid var(--gray-border); border-radius:var(--radius-md); overflow:hidden; background:var(--white);">
+    <div style="display:flex;align-items:center;gap:0;margin-top:8px;border:1px solid var(--gray-border);border-radius:var(--radius-md);overflow:hidden;background:var(--white);">
       <button type="button" onclick="changeGuests(-1)" style="width:52px;height:50px;border:none;border-left:1px solid var(--gray-border);background:var(--white);font-size:22px;cursor:pointer;color:var(--text-primary);flex-shrink:0;">−</button>
       <div style="flex:1;text-align:center;">
-        <div id="guests-num" style="font-size:26px;font-weight:600;color:var(--text-primary);line-height:50px;">1</div>
+        <div id="guests-num" style="font-size:26px;font-weight:600;color:var(--purple-text);line-height:50px;">1</div>
       </div>
       <button type="button" onclick="changeGuests(1)" style="width:52px;height:50px;border:none;border-right:1px solid var(--gray-border);background:var(--white);font-size:22px;cursor:pointer;color:var(--text-primary);flex-shrink:0;">+</button>
     </div>
-    <div id="guests-label" style="text-align:center;margin-top:8px;font-size:13px;color:var(--purple-text);font-weight:500;">מגיע/ה עם 0 אורחים נוספים</div>
+    <div id="guests-label" style="text-align:center;margin-top:8px;font-size:13px;color:var(--purple-text);font-weight:500;">מגיע/ה לבד</div>
 
     <p class="err-msg" id="form-err">נא למלא שם</p>
-
     <button class="submit-btn" onclick="submitForm()">שלח אישור</button>
   </div>
-
   <button class="dash-link" onclick="showPin()">🔒 כניסה לדשבורד מארגנים</button>
 </div>
 
-<!-- ═══ THANK YOU ═══ -->
+<!-- THANK YOU -->
 <div class="page" id="page-thanks">
   <div class="thanks-icon" id="thanks-icon">🎉</div>
   <h2 class="thanks-title" id="thanks-title">תודה!</h2>
-  <p class="thanks-msg" id="thanks-msg">האישור שלך נשמר. נשמח לראותך בשמחה!</p>
+  <p class="thanks-msg" id="thanks-msg">האישור שלך נשמר.</p>
   <button class="back-btn" onclick="showForm()">← חזור לטופס</button>
 </div>
 
-<!-- ═══ PIN ═══ -->
+<!-- PIN -->
 <div class="page" id="page-pin">
   <div class="pin-wrapper">
-    <div class="lock-icon">🔒</div>
+    <div style="font-size:36px;margin-bottom:1rem;">🔒</div>
     <h2 class="pin-title">כניסה למארגנים</h2>
     <p class="pin-sub">הכנס סיסמה לצפייה<br>ברשימת המאשרים</p>
-    <input type="password" id="pin-input" class="pin-input" placeholder="••••••••"
-      onkeydown="if(event.key==='Enter') checkPin()" style="width:100%;" />
-    <p class="err-msg" id="pin-err" style="display:none;">סיסמה שגויה, נסה שוב</p>
+    <input type="password" id="pin-input" placeholder="••••••••" style="text-align:center;letter-spacing:2px;" onkeydown="if(event.key==='Enter') checkPin()" />
+    <p class="err-msg" id="pin-err" style="display:none;text-align:center;">סיסמה שגויה, נסה שוב</p>
     <button class="submit-btn" onclick="checkPin()">כניסה</button>
     <br>
     <button class="dash-link" onclick="showForm()">← חזור לטופס</button>
   </div>
 </div>
 
-<!-- ═══ DASHBOARD ═══ -->
+<!-- DASHBOARD -->
 <div class="page" id="page-dash">
   <div class="dash-inner">
     <div class="dash-header">
       <div class="dash-title">📋 תגובות – בר המצווה של הלל</div>
-      <div class="dash-actions">
+      <div style="display:flex;gap:8px;align-items:center;">
         <button class="icon-btn" onclick="exportCSV()">⬇ ייצא CSV</button>
         <button class="icon-btn" onclick="showForm()">← יציאה</button>
       </div>
     </div>
-
     <div class="metrics">
-      <div class="metric-card">
-        <div class="metric-num" id="m-total">0</div>
-        <div class="metric-lbl">סה"כ תגובות</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-num yes" id="m-yes">0</div>
-        <div class="metric-lbl">מגיעים ✓</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-num no" id="m-no">0</div>
-        <div class="metric-lbl">לא מגיעים ✗</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-num" id="m-guests" style="color:#0F6E56;">0</div>
-        <div class="metric-lbl">סה"כ אורחים</div>
-      </div>
+      <div class="metric-card"><div class="metric-num" id="m-total">0</div><div class="metric-lbl">סה"כ תגובות</div></div>
+      <div class="metric-card"><div class="metric-num" id="m-yes" style="color:var(--purple-text);">0</div><div class="metric-lbl">מגיעים ✓</div></div>
+      <div class="metric-card"><div class="metric-num" id="m-no" style="color:var(--coral-text);">0</div><div class="metric-lbl">לא מגיעים ✗</div></div>
+      <div class="metric-card"><div class="metric-num" id="m-guests" style="color:#0F6E56;">0</div><div class="metric-lbl">סה"כ אורחים</div></div>
     </div>
-
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>שם</th>
-            <th>הגעה</th>
-            <th style="text-align:center;">אורחים</th>
-            <th>תאריך</th>
-          </tr>
-        </thead>
+        <thead><tr><th>#</th><th>שם</th><th>הגעה</th><th style="text-align:center;">אורחים</th><th>תאריך</th></tr></thead>
         <tbody id="rsvp-tbody"></tbody>
       </table>
-      <div class="empty-state" id="empty-state" style="display:none;">עדיין אין תגובות — שתף את הקישור!</div>
+      <div class="empty-state" id="empty-state" style="display:none;">עדיין אין תגובות</div>
     </div>
   </div>
 </div>
 
 <script>
-const STORAGE_KEY = 'hillel_barmitzva_2026';
-const DASHBOARD_PIN = 'orilel13';
-let rsvpData = [];
+var STORAGE_KEY = 'hillel_barmitzva_2026';
+var DASHBOARD_PIN = 'orilel13';
+var guestsCount = 1;
+var rsvpData = [];
 
 function loadData() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    var raw = localStorage.getItem(STORAGE_KEY);
     rsvpData = raw ? JSON.parse(raw) : [];
   } catch(e) { rsvpData = []; }
 }
@@ -302,7 +170,10 @@ function saveData() {
 }
 
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  var pages = document.querySelectorAll('.page');
+  for (var i = 0; i < pages.length; i++) {
+    pages[i].classList.remove('active');
+  }
   document.getElementById(id).classList.add('active');
 }
 
@@ -320,23 +191,20 @@ function showPin() {
   showPage('page-pin');
 }
 
-let guestsCount = 1;
-
 function updateGuestsUI() {
-  const num = document.getElementById('guests-num');
-  const lbl = document.getElementById('guests-label');
-  const numEl = document.getElementById('guests-num');
+  var num = document.getElementById('guests-num');
+  var lbl = document.getElementById('guests-label');
   num.textContent = guestsCount;
   if (guestsCount === 0) {
-    numEl.style.color = 'var(--coral-text)';
+    num.style.color = 'var(--coral-text)';
     lbl.style.color = 'var(--coral-text)';
     lbl.textContent = 'לא מגיע/ה לאירוע';
   } else if (guestsCount === 1) {
-    numEl.style.color = 'var(--purple-text)';
+    num.style.color = 'var(--purple-text)';
     lbl.style.color = 'var(--purple-text)';
     lbl.textContent = 'מגיע/ה לבד';
   } else {
-    numEl.style.color = 'var(--purple-text)';
+    num.style.color = 'var(--purple-text)';
     lbl.style.color = 'var(--purple-text)';
     lbl.textContent = 'מגיע/ה עם ' + (guestsCount - 1) + ' אורחים נוספים';
   }
@@ -348,50 +216,36 @@ function changeGuests(delta) {
 }
 
 function submitForm() {
-  const name = document.getElementById('name-input').value.trim();
-  const err = document.getElementById('form-err');
+  var name = document.getElementById('name-input').value.trim();
+  var err = document.getElementById('form-err');
   if (!name) { err.style.display = 'block'; return; }
   err.style.display = 'none';
 
-  const coming = guestsCount > 0 ? 'yes' : 'no';
-
+  var coming = guestsCount > 0 ? 'yes' : 'no';
   loadData();
-  rsvpData.unshift({
-    name: name,
-    coming: coming,
-    guests: guestsCount,
-    date: new Date().toLocaleDateString('he-IL')
-  });
+  rsvpData.unshift({ name: name, coming: coming, guests: guestsCount, date: new Date().toLocaleDateString('he-IL') });
   saveData();
 
-  const icon = document.getElementById('thanks-icon');
-  const title = document.getElementById('thanks-title');
-  const msg = document.getElementById('thanks-msg');
+  var icon = document.getElementById('thanks-icon');
+  var title = document.getElementById('thanks-title');
+  var msg = document.getElementById('thanks-msg');
 
   if (coming === 'yes') {
     icon.textContent = '🎉';
     title.textContent = 'תודה, ' + name + '!';
-    const extra = guestsCount === 1 ? 'לבד' : 'עם ' + (guestsCount - 1) + ' אורחים נוספים';
+    var extra = guestsCount === 1 ? 'לבד' : 'עם ' + (guestsCount - 1) + ' אורחים נוספים';
     msg.textContent = 'שמחים מאוד! רשמנו אותך ' + extra + '. נתראה בשמחה של הלל ב-7.9.2026';
   } else {
     icon.textContent = '💙';
     title.textContent = 'תודה על העדכון';
     msg.textContent = 'חבל שלא תוכל/י להגיע. תשמח/י לחגוג עם הלל בהזדמנות אחרת!';
   }
-
-  showPage('page-thanks');
-}
-    icon.textContent = '💙';
-    title.textContent = 'תודה על העדכון';
-    msg.textContent = 'חבל שלא תוכל/י להגיע. תשמח/י לחגוג עם הלל בהזדמנות אחרת!';
-  }
-
   showPage('page-thanks');
 }
 
 function checkPin() {
-  const val = document.getElementById('pin-input').value;
-  const err = document.getElementById('pin-err');
+  var val = document.getElementById('pin-input').value;
+  var err = document.getElementById('pin-err');
   if (val === DASHBOARD_PIN) {
     err.style.display = 'none';
     document.getElementById('pin-input').value = '';
@@ -404,53 +258,49 @@ function checkPin() {
 
 function renderDashboard() {
   loadData();
-  const yesRecords = rsvpData.filter(r => r.coming === 'yes');
-  const no = rsvpData.filter(r => r.coming === 'no').length;
-  const totalGuests = yesRecords.reduce((sum, r) => sum + (r.guests || 1), 0);
+  var yesRecords = rsvpData.filter(function(r) { return r.coming === 'yes'; });
+  var noCount = rsvpData.filter(function(r) { return r.coming === 'no'; }).length;
+  var totalGuests = yesRecords.reduce(function(sum, r) { return sum + (r.guests || 1); }, 0);
   document.getElementById('m-total').textContent = rsvpData.length;
   document.getElementById('m-yes').textContent = yesRecords.length;
-  document.getElementById('m-no').textContent = no;
+  document.getElementById('m-no').textContent = noCount;
   document.getElementById('m-guests').textContent = totalGuests;
 
-  const tbody = document.getElementById('rsvp-tbody');
-  const empty = document.getElementById('empty-state');
+  var tbody = document.getElementById('rsvp-tbody');
+  var empty = document.getElementById('empty-state');
   tbody.innerHTML = '';
 
   if (rsvpData.length === 0) {
     empty.style.display = 'block';
   } else {
     empty.style.display = 'none';
-    rsvpData.forEach((r, i) => {
-      const tr = document.createElement('tr');
-      const badgeClass = r.coming === 'yes' ? 'badge-yes' : 'badge-no';
-      const badgeText = r.coming === 'yes' ? 'מגיע/ה ✓' : 'לא מגיע/ה ✗';
-      const guestsCell = r.coming === 'yes' ? (r.guests || 1) : '—';
-      tr.innerHTML = `
-        <td style="color:#6b6a66;font-size:13px;">${rsvpData.length - i}</td>
-        <td style="font-weight:500;">${r.name}</td>
-        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
-        <td style="text-align:center;font-weight:500;">${guestsCell}</td>
-        <td style="color:#6b6a66;font-size:13px;">${r.date}</td>
-      `;
+    for (var i = 0; i < rsvpData.length; i++) {
+      var r = rsvpData[i];
+      var tr = document.createElement('tr');
+      var badgeClass = r.coming === 'yes' ? 'badge-yes' : 'badge-no';
+      var badgeText = r.coming === 'yes' ? 'מגיע/ה ✓' : 'לא מגיע/ה ✗';
+      var guestsCell = r.coming === 'yes' ? (r.guests || 1) : '—';
+      tr.innerHTML = '<td style="color:#6b6a66;font-size:13px;">' + (rsvpData.length - i) + '</td>' +
+        '<td style="font-weight:500;">' + r.name + '</td>' +
+        '<td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>' +
+        '<td style="text-align:center;font-weight:500;">' + guestsCell + '</td>' +
+        '<td style="color:#6b6a66;font-size:13px;">' + r.date + '</td>';
       tbody.appendChild(tr);
-    });
+    }
   }
 }
 
 function exportCSV() {
   loadData();
-  const header = ['#', 'שם', 'הגעה', 'אורחים', 'תאריך'];
-  const rows = rsvpData.map((r, i) => [
-    rsvpData.length - i,
-    r.name,
-    r.coming === 'yes' ? 'מגיע/ה' : 'לא מגיע/ה',
-    r.guests || 0,
-    r.date
-  ]);
-  const csv = '\uFEFF' + [header, ...rows].map(r => r.join(',')).join('\n');
-  const a = document.createElement('a');
+  var rows = [['#', 'שם', 'הגעה', 'אורחים', 'תאריך']];
+  for (var i = 0; i < rsvpData.length; i++) {
+    var r = rsvpData[i];
+    rows.push([rsvpData.length - i, r.name, r.coming === 'yes' ? 'מגיע/ה' : 'לא מגיע/ה', r.guests || 0, r.date]);
+  }
+  var csv = '\uFEFF' + rows.map(function(r) { return r.join(','); }).join('\n');
+  var a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-  a.download = 'hillel_barmitzva_rsvp_' + new Date().toLocaleDateString('he-IL').replace(/\./g,'-') + '.csv';
+  a.download = 'hillel_rsvp.csv';
   a.click();
 }
 </script>
