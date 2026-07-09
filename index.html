@@ -34,6 +34,7 @@
   input[type="text"]:focus, input[type="password"]:focus { border-color: var(--purple-mid); box-shadow: 0 0 0 3px rgba(127,119,221,0.15); }
   .submit-btn { width: 100%; margin-top: 1.5rem; padding: 13px; background: var(--purple-dark); color: white; border: none; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
   .submit-btn:hover { background: var(--purple-text); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
   .err-msg { font-size: 13px; color: var(--coral-text); margin-top: 10px; display: none; }
   .dash-link { margin-top: 1.5rem; font-size: 13px; color: var(--text-secondary); cursor: pointer; background: none; border: none; text-decoration: underline; text-underline-offset: 3px; }
   .dash-link:hover { color: var(--text-primary); }
@@ -65,6 +66,7 @@
   .badge-yes { background: var(--purple-light); color: var(--purple-text); }
   .badge-no { background: var(--coral-light); color: var(--coral-text); }
   .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); font-size: 14px; }
+  .loading { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 14px; }
   @media (max-width: 480px) {
     .event-title { font-size: 28px; }
     .card { padding: 1.5rem; }
@@ -99,7 +101,7 @@
     <div id="guests-label" style="text-align:center;margin-top:8px;font-size:13px;color:var(--purple-text);font-weight:500;">מגיע/ה לבד</div>
 
     <p class="err-msg" id="form-err">נא למלא שם</p>
-    <button class="submit-btn" onclick="submitForm()">שלח אישור</button>
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">שלח אישור</button>
   </div>
   <button class="dash-link" onclick="showPin()">🔒 כניסה לדשבורד מארגנים</button>
 </div>
@@ -133,6 +135,7 @@
       <div class="dash-title">📋 תגובות – בר המצווה של הלל</div>
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="icon-btn" onclick="exportCSV()">⬇ ייצא CSV</button>
+        <button class="icon-btn" onclick="renderDashboard()">↻ רענן</button>
         <button class="icon-btn" onclick="showForm()">← יציאה</button>
       </div>
     </div>
@@ -147,27 +150,18 @@
         <thead><tr><th>#</th><th>שם</th><th>הגעה</th><th style="text-align:center;">אורחים</th><th>תאריך</th></tr></thead>
         <tbody id="rsvp-tbody"></tbody>
       </table>
+      <div class="loading" id="dash-loading">טוען נתונים...</div>
       <div class="empty-state" id="empty-state" style="display:none;">עדיין אין תגובות</div>
     </div>
   </div>
 </div>
 
 <script>
-var STORAGE_KEY = 'hillel_barmitzva_2026';
+var SUPABASE_URL = 'https://tualmbklqanukeyipbnz.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1YWxtYmtscWFudWtleWlwYm56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0MTM1MDgsImV4cCI6MjA5ODk4OTUwOH0.FWnDAi5AqSv9T4SlvcTyuT_kvgcI49HNYmyAB5ToRhc';
 var DASHBOARD_PIN = 'orilel13';
 var guestsCount = 1;
 var rsvpData = [];
-
-function loadData() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    rsvpData = raw ? JSON.parse(raw) : [];
-  } catch(e) { rsvpData = []; }
-}
-
-function saveData() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rsvpData)); } catch(e) {}
-}
 
 function showPage(id) {
   var pages = document.querySelectorAll('.page');
@@ -180,6 +174,9 @@ function showPage(id) {
 function showForm() {
   document.getElementById('name-input').value = '';
   document.getElementById('form-err').style.display = 'none';
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  btn.textContent = 'שלח אישור';
   guestsCount = 1;
   updateGuestsUI();
   showPage('page-form');
@@ -218,29 +215,51 @@ function changeGuests(delta) {
 function submitForm() {
   var name = document.getElementById('name-input').value.trim();
   var err = document.getElementById('form-err');
+  var btn = document.getElementById('submit-btn');
   if (!name) { err.style.display = 'block'; return; }
   err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'שולח...';
 
   var coming = guestsCount > 0 ? 'yes' : 'no';
-  loadData();
-  rsvpData.unshift({ name: name, coming: coming, guests: guestsCount, date: new Date().toLocaleDateString('he-IL') });
-  saveData();
 
-  var icon = document.getElementById('thanks-icon');
-  var title = document.getElementById('thanks-title');
-  var msg = document.getElementById('thanks-msg');
-
-  if (coming === 'yes') {
-    icon.textContent = '🎉';
-    title.textContent = 'תודה, ' + name + '!';
-    var extra = guestsCount === 1 ? 'לבד' : 'עם ' + (guestsCount - 1) + ' אורחים נוספים';
-    msg.textContent = 'שמחים מאוד! רשמנו אותך ' + extra + '. נתראה בשמחה של הלל ב-7.9.2026';
-  } else {
-    icon.textContent = '💙';
-    title.textContent = 'תודה על העדכון';
-    msg.textContent = 'חבל שלא תוכל/י להגיע. תשמח/י לחגוג עם הלל בהזדמנות אחרת!';
-  }
-  showPage('page-thanks');
+  fetch(SUPABASE_URL + '/rest/v1/rsvps', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify({ name: name, coming: coming, guests: guestsCount })
+  }).then(function(res) {
+    if (res.ok) {
+      var icon = document.getElementById('thanks-icon');
+      var title = document.getElementById('thanks-title');
+      var msg = document.getElementById('thanks-msg');
+      if (coming === 'yes') {
+        icon.textContent = '🎉';
+        title.textContent = 'תודה, ' + name + '!';
+        var extra = guestsCount === 1 ? 'לבד' : 'עם ' + (guestsCount - 1) + ' אורחים נוספים';
+        msg.textContent = 'שמחים מאוד! רשמנו אותך ' + extra + '. נתראה בשמחה של הלל ב-7.9.2026';
+      } else {
+        icon.textContent = '💙';
+        title.textContent = 'תודה על העדכון';
+        msg.textContent = 'חבל שלא תוכל/י להגיע. תשמח/י לחגוג עם הלל בהזדמנות אחרת!';
+      }
+      showPage('page-thanks');
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'שלח אישור';
+      err.textContent = 'שגיאה בשמירה, נסה שוב';
+      err.style.display = 'block';
+    }
+  }).catch(function() {
+    btn.disabled = false;
+    btn.textContent = 'שלח אישור';
+    err.textContent = 'שגיאת רשת, בדוק חיבור ונסה שוב';
+    err.style.display = 'block';
+  });
 }
 
 function checkPin() {
@@ -249,53 +268,69 @@ function checkPin() {
   if (val === DASHBOARD_PIN) {
     err.style.display = 'none';
     document.getElementById('pin-input').value = '';
-    renderDashboard();
     showPage('page-dash');
+    renderDashboard();
   } else {
     err.style.display = 'block';
   }
 }
 
 function renderDashboard() {
-  loadData();
-  var yesRecords = rsvpData.filter(function(r) { return r.coming === 'yes'; });
-  var noCount = rsvpData.filter(function(r) { return r.coming === 'no'; }).length;
-  var totalGuests = yesRecords.reduce(function(sum, r) { return sum + (r.guests || 1); }, 0);
-  document.getElementById('m-total').textContent = rsvpData.length;
-  document.getElementById('m-yes').textContent = yesRecords.length;
-  document.getElementById('m-no').textContent = noCount;
-  document.getElementById('m-guests').textContent = totalGuests;
+  document.getElementById('dash-loading').style.display = 'block';
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('rsvp-tbody').innerHTML = '';
 
-  var tbody = document.getElementById('rsvp-tbody');
-  var empty = document.getElementById('empty-state');
-  tbody.innerHTML = '';
-
-  if (rsvpData.length === 0) {
-    empty.style.display = 'block';
-  } else {
-    empty.style.display = 'none';
-    for (var i = 0; i < rsvpData.length; i++) {
-      var r = rsvpData[i];
-      var tr = document.createElement('tr');
-      var badgeClass = r.coming === 'yes' ? 'badge-yes' : 'badge-no';
-      var badgeText = r.coming === 'yes' ? 'מגיע/ה ✓' : 'לא מגיע/ה ✗';
-      var guestsCell = r.coming === 'yes' ? (r.guests || 1) : '—';
-      tr.innerHTML = '<td style="color:#6b6a66;font-size:13px;">' + (rsvpData.length - i) + '</td>' +
-        '<td style="font-weight:500;">' + r.name + '</td>' +
-        '<td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>' +
-        '<td style="text-align:center;font-weight:500;">' + guestsCell + '</td>' +
-        '<td style="color:#6b6a66;font-size:13px;">' + r.date + '</td>';
-      tbody.appendChild(tr);
+  fetch(SUPABASE_URL + '/rest/v1/rsvps?select=*&order=created_at.desc', {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY
     }
-  }
+  }).then(function(res) { return res.json(); })
+  .then(function(data) {
+    rsvpData = data;
+    document.getElementById('dash-loading').style.display = 'none';
+
+    var yesRecords = data.filter(function(r) { return r.coming === 'yes'; });
+    var noCount = data.filter(function(r) { return r.coming === 'no'; }).length;
+    var totalGuests = yesRecords.reduce(function(sum, r) { return sum + (r.guests || 1); }, 0);
+
+    document.getElementById('m-total').textContent = data.length;
+    document.getElementById('m-yes').textContent = yesRecords.length;
+    document.getElementById('m-no').textContent = noCount;
+    document.getElementById('m-guests').textContent = totalGuests;
+
+    var tbody = document.getElementById('rsvp-tbody');
+    tbody.innerHTML = '';
+
+    if (data.length === 0) {
+      document.getElementById('empty-state').style.display = 'block';
+    } else {
+      for (var i = 0; i < data.length; i++) {
+        var r = data[i];
+        var tr = document.createElement('tr');
+        var badgeClass = r.coming === 'yes' ? 'badge-yes' : 'badge-no';
+        var badgeText = r.coming === 'yes' ? 'מגיע/ה ✓' : 'לא מגיע/ה ✗';
+        var guestsCell = r.coming === 'yes' ? (r.guests || 1) : '—';
+        var dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('he-IL') : '';
+        tr.innerHTML = '<td style="color:#6b6a66;font-size:13px;">' + (i + 1) + '</td>' +
+          '<td style="font-weight:500;">' + r.name + '</td>' +
+          '<td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>' +
+          '<td style="text-align:center;font-weight:500;">' + guestsCell + '</td>' +
+          '<td style="color:#6b6a66;font-size:13px;">' + dateStr + '</td>';
+        tbody.appendChild(tr);
+      }
+    }
+  }).catch(function() {
+    document.getElementById('dash-loading').textContent = 'שגיאה בטעינת נתונים';
+  });
 }
 
 function exportCSV() {
-  loadData();
   var rows = [['#', 'שם', 'הגעה', 'אורחים', 'תאריך']];
   for (var i = 0; i < rsvpData.length; i++) {
     var r = rsvpData[i];
-    rows.push([rsvpData.length - i, r.name, r.coming === 'yes' ? 'מגיע/ה' : 'לא מגיע/ה', r.guests || 0, r.date]);
+    var dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('he-IL') : '';
+    rows.push([i + 1, r.name, r.coming === 'yes' ? 'מגיע/ה' : 'לא מגיע/ה', r.guests || 0, dateStr]);
   }
   var csv = '\uFEFF' + rows.map(function(r) { return r.join(','); }).join('\n');
   var a = document.createElement('a');
